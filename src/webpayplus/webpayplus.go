@@ -1,0 +1,5 @@
+package webpayplus
+
+const WEBPAY_PLUS_COMMERCE_CODE string = "597055555532"
+const WEBPAY_API_KEY string = "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C"
+const WEBPAY_ENDPOINT string = "/rswebpaytransaction/api/webpay/v1.3"
