@@ -14,12 +14,12 @@ Descarga el modulo con go get
 Importa el modulo en los archivos donde se usará
 ```
 import(
-    "github.com/ppastene/unnofficial-transbank-sdk-go/src/common"
+	"github.com/ppastene/unnofficial-transbank-sdk-go/src/common"
 	"github.com/ppastene/unnofficial-transbank-sdk-go/src/webpayplus"
 )
 
 func main() {
-    var options common.Options
+	var options common.Options
 	transaction := webpayplus.NewTransaction(options.ForIntegration(webpayplus.WEBPAY_PLUS_COMMERCE_CODE, webpayplus.WEBPAY_API_KEY))
 }
 ```
@@ -32,7 +32,9 @@ Crea una variable de tipo Transaction usando el constructor NewTransaction() pas
 ``` transaction := webpayplus.NewTransaction(options) ```
 
 Los metodos para consultar el servicio de Transbank cumplen con lo establecido en la documentación oficial. Por ejemplo si se desea crear una transaccion de Webpay Plus escriba lo siguiente y se imprimirá por consola el token y url dados por Transbank (se debe importar las librerias fmt y time):
-``` order := fmt.Sprintf("order%d%d%d%d%d%d", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
+```
+t := time.Now().Local()
+order := fmt.Sprintf("order%d%d%d%d%d%d", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
 session := fmt.Sprintf("session%d%d%d%d%d%d", t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
 amount := 50000
 returnUrl := "http://www.micomercio.cl/boleta"
@@ -50,7 +52,7 @@ fmt.Println("token:", response.token, "url:", response.url)
 - [ ] Pruebas Unitarias
 
 ## Documentación
-Si bien este es un SDK no oficial toda la informacion relevante a la implementación del servicio de Webpay en este y otros lenmguajes lo puedes encontrar en el sitio https://www.transbankdevelopers.cl.
+Si bien este es un SDK no oficial toda la informacion relevante a la implementación del servicio de Webpay en este y otros lenguajes lo puedes encontrar en el sitio https://www.transbankdevelopers.cl.
 
 La documentación relevante para usar este y otros SDK es:
 - Primeros pasos con [Webpay](https://www.transbankdevelopers.cl/documentacion/webpay)
