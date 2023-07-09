@@ -41,6 +41,32 @@ returnUrl := "http://www.micomercio.cl/boleta"
 response := transaction.Create(order, session, amount, "http://localhost:3000/resumen")
 fmt.Println("token:", response.token, "url:", response.url)
 ```
+## Metodos Webpay Plus
+### Create
+Se crea una transaccion
+```
+transaction.create(buy_order string, session_id string, amount float64, return_url string)
+```
+### Commit
+Se confirma la transaccion
+```
+transaction.commit(token string)
+```
+### Refund
+Se solicita devolucion parcial o total de la transaccion.
+```
+transaction.refund(token string, amount float64)
+```
+### Status
+Muestra información de la transacción, disponible por 7 dias desde su creación
+```
+transaction.status(token string)
+``` 
+### Capture
+Se realiza una captura diferida de la transaccion.
+```
+transaction.capture(token string, buy_order string, authorization_code string, capture_amount float64)
+```
 
 ## TODO
 - [x] Flujos Webpay Plus
