@@ -8,80 +8,90 @@ import (
 	"github.com/ppastene/unnofficial-transbank-sdk-go/src/webpayplus/responses"
 )
 
-type payload struct {
-	BuyOrder  string  `json:"buy_order"`
-	SessionId string  `json:"session_id"`
-	Amount    float64 `json:"amount"`
-	ReturnUrl string  `json:"return_url"`
-}
-
 type Transaction struct {
 	Options common.Options
-}
-
-func newPayload(buyOrder, sessionId string, amount float64, returnUrl string) payload {
-	return payload{buyOrder, sessionId, amount, returnUrl}
 }
 
 func NewTransaction(options common.Options) Transaction {
 	return Transaction{options}
 }
 
-func (t Transaction) Create(buyOrder, sessionId string, amount float64, returnUrl string) responses.TransactionCreateResponse {
-	payload := newPayload(buyOrder, sessionId, amount, returnUrl)
+func (t Transaction) Create(buyOrder, sessionId string, amount float64, returnUrl string) (responses.TransactionCreateResponse, error) {
+	payload := map[string]interface{}{
+		"buy_order":  buyOrder,
+		"session_id": sessionId,
+		"amount":     amount,
+		"return_url": returnUrl,
+	}
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
-		panic("Error al convertir a json")
+		return responses.TransactionCreateResponse{}, err
+	}
+	request, err := common.HTTPRequest("POST", "/rswebpaytransaction/api/webpay/v1.3/transactions/", &jsonData, t.Options)
+	if err != nil {
+		return responses.TransactionCreateResponse{}, err
 	}
 	var response responses.TransactionCreateResponse
-	err = json.Unmarshal(common.HTTPRequest("POST", "/rswebpaytransaction/api/webpay/v1.3/transactions/", &jsonData, t.Options), &response)
+	err = json.Unmarshal(request, &response)
 	if err != nil {
-		panic("Error al convertir json a struct")
+		return responses.TransactionCreateResponse{}, err
 	}
-	return response
+	return response, nil
 }
 
-func (t Transaction) Commit(token string) responses.TransactionStatusResponse {
+func (t Transaction) Commit(token string) (responses.TransactionStatusResponse, error) {
 	var data []byte
-	var response responses.TransactionStatusResponse
-	err := json.Unmarshal(common.HTTPRequest("PUT", "/rswebpaytransaction/api/webpay/v1.3/transactions/"+token, &data, t.Options), &response)
+	request, err := common.HTTPRequest("PUT", "/rswebpaytransaction/api/webpay/v1.3/transactions/"+token, &data, t.Options)
 	if err != nil {
-		panic("Error al convertir json a struct")
+		return responses.TransactionStatusResponse{}, err
 	}
-	return response
+	var response responses.TransactionStatusResponse
+	err = json.Unmarshal(request, &response)
+	if err != nil {
+		return responses.TransactionStatusResponse{}, err
+	}
+	return response, nil
 }
 
-func (t Transaction) Refund(token, amount string) responses.TransactionRefundResponse {
+func (t Transaction) Refund(token, amount string) (responses.TransactionRefundResponse, error) {
 	intAmount, err := strconv.Atoi(amount)
 	if err != nil {
-		panic("Error al convertir de string a entero")
+		return responses.TransactionRefundResponse{}, err
 	}
 	data := map[string]interface{}{
 		"amount": intAmount,
 	}
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		panic("Error al convertir valor a json")
+		return responses.TransactionRefundResponse{}, err
+	}
+	request, err := common.HTTPRequest("POST", "/rswebpaytransaction/api/webpay/v1.3/transactions/"+token+"/refunds", &jsonData, t.Options)
+	if err != nil {
+		return responses.TransactionRefundResponse{}, err
 	}
 	var response responses.TransactionRefundResponse
-	err = json.Unmarshal(common.HTTPRequest("POST", "/rswebpaytransaction/api/webpay/v1.3/transactions/"+token+"/refunds", &jsonData, t.Options), &response)
+	err = json.Unmarshal(request, &response)
 	if err != nil {
-		panic("Error al convertir json a struct")
+		return responses.TransactionRefundResponse{}, err
 	}
-	return response
+	return response, nil
 }
 
-func (t Transaction) Status(token string) responses.TransactionStatusResponse {
+func (t Transaction) Status(token string) (responses.TransactionStatusResponse, error) {
 	var data []byte
-	var response responses.TransactionStatusResponse
-	err := json.Unmarshal(common.HTTPRequest("PUT", "/rswebpaytransaction/api/webpay/v1.3/transactions/"+token, &data, t.Options), &response)
+	request, err := common.HTTPRequest("PUT", "/rswebpaytransaction/api/webpay/v1.3/transactions/"+token, &data, t.Options)
 	if err != nil {
-		panic("Error al convertir json a struct")
+		return responses.TransactionStatusResponse{}, err
 	}
-	return response
+	var response responses.TransactionStatusResponse
+	err = json.Unmarshal(request, &response)
+	if err != nil {
+		return responses.TransactionStatusResponse{}, err
+	}
+	return response, nil
 }
 
-func (t Transaction) Capture(token, buyOrder, authorizationCode string, captureAmount float64) responses.TransactionCaptureResponse {
+func (t Transaction) Capture(token, buyOrder, authorizationCode string, captureAmount float64) (responses.TransactionCaptureResponse, error) {
 	data := map[string]interface{}{
 		"buy_order":          buyOrder,
 		"authorization_code": authorizationCode,
@@ -89,12 +99,13 @@ func (t Transaction) Capture(token, buyOrder, authorizationCode string, captureA
 	}
 	jsonData, err := json.Marshal(data)
 	if err != nil {
-		panic("Error al convertir valor a json")
+		return responses.TransactionCaptureResponse{}, err
 	}
+	request, err := common.HTTPRequest("POST", "/rswebpaytransaction/api/webpay/v1.3/transactions/"+token+"/capture", &jsonData, t.Options)
 	var response responses.TransactionCaptureResponse
-	err = json.Unmarshal(common.HTTPRequest("POST", "/rswebpaytransaction/api/webpay/v1.3/transactions/"+token+"/capture", &jsonData, t.Options), &response)
+	err = json.Unmarshal(request, &response)
 	if err != nil {
-		panic("Error al convertir json a struct")
+		return responses.TransactionCaptureResponse{}, err
 	}
-	return response
+	return response, nil
 }
