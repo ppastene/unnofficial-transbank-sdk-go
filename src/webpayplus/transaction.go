@@ -8,19 +8,8 @@ import (
 	"github.com/ppastene/unnofficial-transbank-sdk-go/src/webpayplus/responses"
 )
 
-type payload struct {
-	BuyOrder  string  `json:"buy_order"`
-	SessionId string  `json:"session_id"`
-	Amount    float64 `json:"amount"`
-	ReturnUrl string  `json:"return_url"`
-}
-
 type Transaction struct {
 	Options common.Options
-}
-
-func newPayload(buyOrder, sessionId string, amount float64, returnUrl string) payload {
-	return payload{buyOrder, sessionId, amount, returnUrl}
 }
 
 func NewTransaction(options common.Options) Transaction {
@@ -28,6 +17,12 @@ func NewTransaction(options common.Options) Transaction {
 }
 
 func (t Transaction) Create(buyOrder, sessionId string, amount float64, returnUrl string) (responses.TransactionCreateResponse, error) {
+	payload := map[string]interface{}{
+		"buy_order":  buyOrder,
+		"session_id": sessionId,
+		"amount":     amount,
+		"return_url": returnUrl,
+	}
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
 		return responses.TransactionCreateResponse{}, err
