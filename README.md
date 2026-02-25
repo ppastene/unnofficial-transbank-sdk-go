@@ -1,3 +1,12 @@
+# ⚠️ PROYECTO DEPRECADO / ABANDONADO
+
+> [!IMPORTANT]
+> **Este SDK ha sido reemplazado** por una versión mucho más robusta, modular y actualizada. No se recomienda el uso de esta versión antigua ya que no recibirá mantenimiento ni correcciones.
+>
+> 👉 **Encuentra la nueva versión aquí:** [github.com/ppastene/transbank-sdk-go](https://github.com/ppastene/transbank-sdk-go)
+
+---
+
 # Unnofficial SDK Transbank Go
 SDK no oficial de Transbank Webpay hecho en el lenguage de programación Go
 
@@ -99,3 +108,4 @@ Personalmente recomiendo una mirada a los siguientes repositorios
 A pesar de ser un SDK no oficial se hace todo lo posible para cumplir con la documentación oficial para un correcto uso e integración. Aun así este SDK no está terminado y falta por implementar varias funcionalidades para considerar un modulo bien hecho hacia el desarrollador, así que se recomienda NO USAR este modulo en entornos de producción.
 
 Este proyecto está abierto a recibir issues y Pull Requests, como también estudiar el codigo y realizar sus propias integraciones
+
